@@ -2,8 +2,8 @@ import streamlit as st
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import OpenAI
 import os
-from googletrans import Translator
 from PIL import Image
+from deep_translator import GoogleTranslator
 
 template = """
     Below is an email that may be poorly worded.
@@ -28,11 +28,10 @@ template = """
 
 def translate(input_text):
     # translate the text if it is not english
-    translater = Translator()
-    if translater.detect(input_text).lang!= "en":
-        output_text = translater.translate(input_text, dest="en").text
-        return output_text
-    return input_text
+    translater = GoogleTranslator(source='auto', target='en')
+    output_text = translater.translate(text=input_text)
+    return output_text
+    
 
 def get_prompt(template):
     prompt = PromptTemplate(
@@ -62,11 +61,14 @@ with col1:
 
 st.markdown("## Enter Your Email To Convert")
 
-
-with col2:
-    option_tone = st.selectbox(
+def get_tone():
+    tone = st.selectbox(
         'Which tone would you like your email to have?',
         ('Formal', 'Informal'))
+    return tone
+
+with col2:
+    option_tone = get_tone()
     
 def get_key():
     input_text = st.text_input(label="OpenAI API Key ",  placeholder="Ex: sk-2twmA8tfCb8un4...", key="openai_api_key_input")
@@ -76,7 +78,6 @@ openai_api_key = get_key()
 def get_text():
     input_text = st.text_area(label="Email Input", label_visibility='collapsed', placeholder="Your Email here")
     if input_text:
-        print(input_text)
         translated_text = translate(input_text)
         return translated_text
     return input_text
