@@ -36,7 +36,7 @@ def translate(input_text):
     
 
 st.set_page_config(page_title="Polish my Email", page_icon="✉️")
-st.image("assets\leo.png", width=200)
+st.image("assets\logo.png", width=200)
 st.header("Polish my Email :robot_face: :e-mail:")
 
 col1, col2 = st.columns(2)
