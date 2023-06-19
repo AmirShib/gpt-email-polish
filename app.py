@@ -3,7 +3,7 @@ from langchain import PromptTemplate, LLMChain
 from langchain.llms import OpenAI
 import os
 from googletrans import Translator
-
+from PIL import Image
 
 template = """
     Below is an email that may be poorly worded.
@@ -36,7 +36,8 @@ def translate(input_text):
     
 
 st.set_page_config(page_title="Polish my Email", page_icon="✉️")
-st.image("assets\logo.png", width=200)
+image = Image.open("assets/logo.png")
+st.image(image, width=200)
 st.header("Polish my Email :robot_face: :e-mail:")
 
 col1, col2 = st.columns(2)
