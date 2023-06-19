@@ -33,7 +33,19 @@ def translate(input_text):
         output_text = translater.translate(input_text, dest="en").text
         return output_text
     return input_text
-    
+
+def get_prompt(template):
+    prompt = PromptTemplate(
+        input_variables=["tone", "email"],
+        template=template,
+    )
+    return prompt
+
+def load_LLM(openai_api_key):
+    """Logic for loading the chain you want to use should go here."""
+    # Make sure your openai_api_key is set as an environment variable
+    llm = OpenAI(temperature=.7, openai_api_key=openai_api_key)
+    return llm
 
 st.set_page_config(page_title="Polish my Email", page_icon="✉️")
 image = Image.open("assets/logo.png")
@@ -86,10 +98,7 @@ st.button("*Generate email*", type='secondary', help="Click to see an example of
 
 st.markdown("### Your Converted Email:")
 
-prompt = PromptTemplate(
-    input_variables=["tone", "email"],
-    template=template,
-)
+prompt = get_prompt(template)
 
 
 if email_input:
@@ -97,7 +106,7 @@ if email_input:
         st.warning('Please insert OpenAI API Key. Instructions [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key)', icon="⚠️")
         st.stop()
 
-    llm = OpenAI(openai_api_key=openai_api_key, temperature=0.7)
+    llm = load_LLM(openai_api_key)
 
     prompt_with_email = prompt.format(tone=option_tone, email=email_input)
 
